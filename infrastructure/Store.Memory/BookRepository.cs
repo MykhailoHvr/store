@@ -7,14 +7,20 @@ namespace Store.Memory
     {
         private readonly Book[] books = new[]
         {
-            new Book(1,"Art of Programing"),
-            new Book(2,"Pro Git"),
-            new Book(3,"Pro ASP.NET Core MVC 2"),
+            new Book(1, "ISBN 12312-31231", "D. Knuth", "Art of Programing"),
+            new Book(2, "ISBN 12312-31232", "S. Chacon, B. Straub", "Pro Git"),
+            new Book(3,"ISBN 12312-31232", "A. Freeman" ,"Pro ASP.NET Core MVC 2"),
         };
 
-        public Book[] GetAllByTitle(string titlePart)
+        public Book[] GetAllByIsbn(string isbn)
         {
-            return books.Where(book => book.Title.Contains(titlePart)).ToArray();
+            return books.Where(book => book.Isbn == isbn).ToArray();
+        }
+
+        public Book[] GetAllByTitleOrAuthor(string query)
+        {
+            return books.Where(book => book.Author.Contains(query)
+                                    || book.Title.Contains(query)).ToArray();
         }
     }
 }
