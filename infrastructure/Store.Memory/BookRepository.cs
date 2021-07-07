@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 namespace Store.Memory
 {
@@ -7,9 +6,9 @@ namespace Store.Memory
     {
         private readonly Book[] books = new[]
         {
-            new Book(1, "ISBN 12312-31231", "D. Knuth", "Art of Programing"),
-            new Book(2, "ISBN 12312-31232", "S. Chacon, B. Straub", "Pro Git"),
-            new Book(3,"ISBN 12312-31232", "A. Freeman" ,"Pro ASP.NET Core MVC 2"),
+            new Book(1, "ISBN1231231231", "D. Knuth", "Art of Programing"),
+            new Book(2, "ISBN1231231232", "S. Chacon, B. Straub", "Pro Git"),
+            new Book(3,"ISBN1231231232", "A. Freeman" ,"Pro ASP.NET Core MVC 2"),
         };
 
         public Book[] GetAllByIsbn(string isbn)
