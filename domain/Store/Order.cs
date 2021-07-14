@@ -34,7 +34,7 @@ namespace Store
             this.items = new List<OrderItem>(items);
         }
 
-        public void AddItem(Book book, int count)
+        private void AddOrUpdateItem(Book book, int count)
         {
             if (book == null)
                 throw new ArgumentNullException(nameof(book));
@@ -52,26 +52,23 @@ namespace Store
             }
         }
 
-        public void RemoveItem(Book book, int count)
+        public void AddBook(Book book)
         {
             if (book == null)
                 throw new ArgumentNullException(nameof(book));
 
-            if (items.Count == 0)
-                throw new InvalidOperationException("Cart must contain items");
-
-            var item = items.SingleOrDefault(x => x.BookId == book.Id);
-            if (item == null)
-                throw new InvalidOperationException("Cart does not contain item with ID: " + book.Id);
-
-            items.Remove(item);
-            if (item.Count - count == 0)
-                return;
-
-            items.Add(new OrderItem(book.Id, item.Count - count, book.Price));
+            AddOrUpdateItem(book, 1);
         }
 
-        public void RemoveItems(Book book)
+        public void RemoveBook(Book book)
+        {
+            if (book == null)
+                throw new ArgumentNullException(nameof(book));
+
+            AddOrUpdateItem(book, -1);
+        }
+
+        public void RemoveItem(Book book)
         {
             if (book == null)
                 throw new ArgumentNullException(nameof(book));
