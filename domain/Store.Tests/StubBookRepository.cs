@@ -8,6 +8,7 @@ namespace Store.Tests
 
         public Book[] ResultOfGetAllByTitleOrAuthor { get; set; }
 
+
         public Book[] GetAllByIds(IEnumerable<int> bookIds)
         {
             throw new System.NotImplementedException();
