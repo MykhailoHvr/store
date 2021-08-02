@@ -82,6 +82,18 @@ namespace Store.Web.Controllers
             return RedirectToAction("Index", "Order");
         }
 
+        [HttpPost]
+        public IActionResult UpdateItem(int bookId, int count)
+        {
+            (Order order, Cart cart) = GetOrCreateOrderAndCart();
+
+            order.GetItem(bookId).Count = count;
+
+            SaveOrderAndCart(order, cart);
+
+            return RedirectToAction("Index", "Order");
+        }
+
         private (Order order, Cart cart) GetOrCreateOrderAndCart()
         {
             Order order;
