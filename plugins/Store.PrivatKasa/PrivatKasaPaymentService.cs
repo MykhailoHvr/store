@@ -1,30 +1,63 @@
-﻿using Store.Contractors;
+﻿using Microsoft.AspNetCore.Http;
+using Store.Contractors;
 using Store.Web.Contractors;
+using System;
 using System.Collections.Generic;
 
 namespace Store.PrivatKasa
 {
     public class PrivatKasaPaymentService : IPaymentService, IWebContractorService
     {
-        public string UniqueCode => "PrivatKasa";
+        private readonly IHttpContextAccessor httpContextAccessor;
+
+        public PrivatKasaPaymentService(IHttpContextAccessor httpContextAccessor)
+        {
+            this.httpContextAccessor = httpContextAccessor;
+        }
+
+        private HttpRequest Request => httpContextAccessor.HttpContext.Request;
+
+        public string Name => "PrivatKasa";
 
         public string Title => "Payment by credit card";
 
-        public string GetUri => "/PrivatKasa/";
-
-        public Form CreateForm(Order order)
+        public Form FirstForm(Order order)
         {
-            return new Form(UniqueCode, order.Id, 1, false, new Field[0]);
+            return Form.CreateFirst(Name)
+                       .AddParameter("orderId", order.Id.ToString());
+        }
+
+        public Form NextForm(int step, IReadOnlyDictionary<string, string> values)
+        {
+            if (step != 1)
+                throw new InvalidOperationException("Invalid Privat.Kasa payment step.");
+
+            return Form.CreateLast(Name, step + 1, values);
         }
 
         public OrderPayment GetPayment(Form form)
         {
-            return new OrderPayment(UniqueCode, "payment card", new Dictionary<string, string>());
+            if (form.ServiceName != Name || !form.IsFinal)
+                throw new InvalidOperationException("Invalid payment form.");
+
+            return new OrderPayment(Name, "payment card", form.Parameters);
         }
 
-        public Form MoveNextForm(int orderId, int step, IReadOnlyDictionary<string, string> values)
+        public Uri StartSession(IReadOnlyDictionary<string, string> parameters, Uri returnUri)
         {
-            return new Form(UniqueCode, orderId, 2, true, new Field[0]);
+            var queryString = QueryString.Create(parameters);
+            queryString += QueryString.Create("returnUri", returnUri.ToString());
+
+            var builder = new UriBuilder(Request.Scheme, Request.Host.Host)
+            {
+                Path = "PrivatKasa/",
+                Query = queryString.ToString(),
+            };
+
+            if (Request.Host.Port != null)
+                builder.Port = Request.Host.Port.Value;
+
+            return builder.Uri;
         }
     }
 }

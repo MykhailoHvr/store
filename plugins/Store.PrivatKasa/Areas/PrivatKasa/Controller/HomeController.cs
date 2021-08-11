@@ -1,19 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Store.PrivatKasa.Areas.PrivatKasa.Models;
 
 namespace Store.PrivatKasa.Areas.PrivatKasa.Controllers
 {
     [Area("PrivatKasa")]
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Index(int orderId, string returnUri)
         {
-            return View();
+            var model = new ExampleModel
+            {
+                OrderId = orderId,
+                ReturnUri = returnUri,
+            };
+
+            return View(model);
         }
 
-        // /YandexKassa/Home/Callback
-        public IActionResult Callback()
+       
+        public IActionResult Callback(int orderId, string returnUri)
         {
-            return View();
+            var model = new ExampleModel
+            {
+                OrderId = orderId,
+                ReturnUri = returnUri,
+            };
+
+
+
+            return View(model);
         }
     }
 }
