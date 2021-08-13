@@ -1,9 +1,20 @@
-﻿@{
+﻿@using Store.PrivatKasa.Areas.PrivatKasa.Controllers
+@using Store.PrivatKasa.Areas.PrivatKasa.Models
+@model ExampleModel
+
+@{
     ViewData["Title"] = "Privat Kasa";
 }
 
 <h1>Privat Kasa</h1>
 
 <p>
-    <a href="/PrivatKasa/Home/Callback">Pay</a>.
+    Here we emulate a redirect to an external payment service Yandex.Checkout. In source code
+    project, you can see how the parameters are passed.
 </p>
+
+<form action="@Url.Action(nameof(HomeController.Callback), "Home", new { area = "PrivatKasa" })" method="post">
+    <input type="hidden" name="orderId" value="@Model.OrderId" />
+    <input type="hidden" name="returnUri" value="@Model.ReturnUri" />
+    <button type="submit" class="btn btn-success">Pay</button>
+</form> 
