@@ -9,6 +9,7 @@ using Store.Messages;
 using Store.Web.Contractors;
 using Store.PrivatKasa;
 using System;
+using Store.Web.App;
 
 namespace Store.Web
 {
@@ -25,6 +26,7 @@ namespace Store.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddHttpContextAccessor();
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
@@ -41,6 +43,7 @@ namespace Store.Web
             services.AddSingleton<IPaymentService, PrivatKasaPaymentService>();
             services.AddSingleton<IWebContractorService, PrivatKasaPaymentService>();
             services.AddSingleton<BookService>();
+            services.AddSingleton<OrderService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,13 +71,12 @@ namespace Store.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                    name: "areas",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-
-                endpoints.MapAreaControllerRoute(
-                    name: "privat.kasa",
-                    areaName: "PrivatKasa",
-                    pattern: "PrivatKasa/{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
