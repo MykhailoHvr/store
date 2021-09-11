@@ -4,12 +4,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Store.Contractors;
-using Store.Memory;
 using Store.Messages;
 using Store.Web.Contractors;
 using Store.PrivatKasa;
 using System;
 using Store.Web.App;
+using Store.Data.EF;
 
 namespace Store.Web
 {
@@ -38,8 +38,8 @@ namespace Store.Web
                 options.Cookie.IsEssential = true;
             });
 
-            services.AddSingleton<IBookRepository, BookRepository>();
-            services.AddSingleton<IOrderRepository, OrderRepository>();
+            services.AddEfRepositories(Configuration.GetConnectionString("Store"));
+
             services.AddSingleton<INotificationService, DebugNotificationService>();
             services.AddSingleton<IDeliveryService, PostamateDeliveryService>();
             services.AddSingleton<IPaymentService, CashPaymentService>();
